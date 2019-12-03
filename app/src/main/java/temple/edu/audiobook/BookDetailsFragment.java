@@ -18,9 +18,10 @@ public class BookDetailsFragment extends Fragment {
     private BookDetailsInterface mListener;
     Context c;
     private Book book;
-    TextView TextView;
+    TextView textView;
     ImageView coverImageView;
     ImageButton PlayButton;
+
     public BookDetailsFragment() {}
 
     public static BookDetailsFragment newInstance(Book bk) {
@@ -44,11 +45,11 @@ public class BookDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_book_details, container, false);
-        TextView = v.findViewById(R.id.textView1);
-        //authorTextView = v.findViewById(R.id.textView2);
-        //yearTextView = v.findViewById(R.id.textView3);
+        textView = v.findViewById(R.id.textView1);
+
         coverImageView = v.findViewById(R.id.imageView1);
         PlayButton = v.findViewById(R.id.imageButton2);
+
         if (book != null) {
             displayBook(book);
             PlayButton.setOnClickListener(new View.OnClickListener() {
@@ -58,15 +59,15 @@ public class BookDetailsFragment extends Fragment {
                 }
             });
         }
+
         return v;
     }
 
 
 
     public void displayBook(final Book book) {
-        TextView.setText(book.name +"\n"+ book.author +"\n"+ book.published);
-
-        Picasso.get().load(book.coverURL).into(coverImageView);
+        textView.setText(book.name +"\n"+ book.author +"\n"+ book.published);
+        Picasso.get().load(book.coverURL).fit().into(coverImageView);
     }
     @Override
     public void onAttach(Context context) {
@@ -87,6 +88,5 @@ public class BookDetailsFragment extends Fragment {
     }
     public interface BookDetailsInterface{
         void playBook (Book book);
-
     }
 }

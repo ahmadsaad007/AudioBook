@@ -39,13 +39,11 @@
             android:layout_width="111dp"
             android:layout_height="39dp"
             android:layout_gravity="right|top"
-            android:layout_marginStart="30dp"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="96dp"
             android:text="Search"
             app:layout_constraintBottom_toTopOf="@+id/detailfrag"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/searchText"
             app:layout_constraintTop_toTopOf="parent" />
 
         <FrameLayout
@@ -98,8 +96,8 @@
             app:layout_constraintEnd_toStartOf="@+id/detailfrag"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/imageButton"
-            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
-            tools:layout_editor_absoluteY="238dp" />
+            app:layout_constraintTop_toBottomOf="@+id/listfrag"
+            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
 
         <SeekBar
             android:id="@+id/seekBar"
