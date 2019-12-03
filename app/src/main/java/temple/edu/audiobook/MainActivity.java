@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
         service = new Intent(this, AudiobookService.class);
         bindService(service, serviceConnection, BIND_AUTO_CREATE);
-
+        setTitle(nowPlayingBookTitle);
 
         //Clicking Pause Button
         pauseButton.setOnClickListener(new View.OnClickListener() {
@@ -128,7 +128,8 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             @Override
             public void onClick(View view) {
                 mediaControlBinder.stop();
-                setTitle("Now Playing: ");
+                nowPlayingBookTitle = "Now Playing: ";
+                setTitle(nowPlayingBookTitle);
                 seekbar.setProgress(0);
                 isPlaying = false;
                 bookId = -1;
@@ -163,7 +164,8 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                     seekbar.setProgress(bookProgress.getProgress());
                 } else if (bookProgress.getProgress() == nowPlayingBookDuration) {
                     mediaControlBinder.stop();
-                    setTitle("Now Playing: ");
+                    nowPlayingBookTitle = "Now Playing: ";
+                    setTitle(nowPlayingBookTitle);
                     seekbar.setProgress(0);
                     isPlaying = false;
                     bookId = -1;
@@ -251,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         seekbar.setMax(book.duration);
         String title = "Now Playing: " + book.name;
         setTitle(title);
-        nowPlayingBookTitle= book.name;
+        nowPlayingBookTitle= title;
         nowPlayingBookDuration = book.duration;
         //now playing title
         mediaControlBinder.play(book.id);
