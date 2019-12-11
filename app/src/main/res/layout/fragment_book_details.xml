@@ -8,11 +8,11 @@
 
     <ImageView
         android:id="@+id/imageView1"
-        android:layout_width="101dp"
-        android:layout_height="126dp"
+        android:layout_width="53dp"
+        android:layout_height="77dp"
         android:layout_gravity="top|center"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="73dp"
+        android:layout_marginStart="96dp"
+        android:layout_marginTop="80dp"
         android:contentDescription="BookCover"
         android:src="@android:color/background_light"
         app:layout_constraintEnd_toStartOf="@+id/textView1"
@@ -21,8 +21,8 @@
 
     <TextView
         android:id="@+id/textView1"
-        android:layout_width="111dp"
-        android:layout_height="79dp"
+        android:layout_width="122dp"
+        android:layout_height="49dp"
         android:layout_gravity="center|center_horizontal|top"
         android:layout_marginTop="80dp"
         android:contentDescription="Title"
@@ -32,10 +32,18 @@
 
     <ImageButton
         android:id="@+id/imageButton2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="36dp"
+        android:layout_height="38dp"
         android:src="@android:drawable/ic_media_play"
         app:layout_constraintStart_toEndOf="@+id/imageView1"
+        app:layout_constraintTop_toBottomOf="@+id/textView1" />
+
+    <Button
+        android:id="@+id/downDelete"
+        android:layout_width="82dp"
+        android:layout_height="36dp"
+        android:text="Download"
+        app:layout_constraintStart_toEndOf="@+id/imageButton2"
         app:layout_constraintTop_toBottomOf="@+id/textView1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

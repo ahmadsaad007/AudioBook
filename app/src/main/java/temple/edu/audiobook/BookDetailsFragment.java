@@ -1,15 +1,27 @@
 package temple.edu.audiobook;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 
 import androidx.fragment.app.Fragment;
 public class BookDetailsFragment extends Fragment {
@@ -21,7 +33,7 @@ public class BookDetailsFragment extends Fragment {
     TextView textView;
     ImageView coverImageView;
     ImageButton PlayButton;
-
+    Button deleteButton;
     public BookDetailsFragment() {}
 
     public static BookDetailsFragment newInstance(Book bk) {
@@ -49,20 +61,33 @@ public class BookDetailsFragment extends Fragment {
 
         coverImageView = v.findViewById(R.id.imageView1);
         PlayButton = v.findViewById(R.id.imageButton2);
-
+        deleteButton = v.findViewById(R.id.downDelete);
         if (book != null) {
             displayBook(book);
             PlayButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.playBook(book);
+                    if(!isDownloaded(book))
+                        mListener.playBook(book);
+                    else{
+
+                    }
+                }
+            });
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new Download(getActivity()).execute();//downlaod the book
+                    deleteButton.setText("Delete");
                 }
             });
         }
 
         return v;
     }
-
+    public boolean isDownloaded(Book book){
+        return true;
+    }
 
 
     public void displayBook(final Book book) {
@@ -89,4 +114,61 @@ public class BookDetailsFragment extends Fragment {
     public interface BookDetailsInterface{
         void playBook (Book book);
     }
+
+
+
+
+    private  class Download extends AsyncTask<Void, Integer, Boolean> {
+        Context context;
+
+        public Download(Context context) {
+            this.context = context;
+        }
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+
+            try {
+                URL url = new URL("https://kamorris.com/lab/audlib/download.php?id="+book.id);
+                URLConnection urlConnection = url.openConnection();
+                InputStream inputStream = urlConnection.getInputStream();
+                int contentLength = urlConnection.getContentLength();
+                String filePath = context.getFilesDir()
+                        + File.separator + book.id + ".mp3";
+                Log.e("value",filePath+"");
+                int downloadSize = 0;
+                byte[] bytes = new byte[1024];
+                int length;
+                OutputStream outputStream = new FileOutputStream(filePath);
+                while ((length = inputStream.read(bytes)) != -1){
+                    outputStream.write(bytes,0,length);
+                    downloadSize += length;
+                    publishProgress(downloadSize * 100/contentLength);
+                }
+                inputStream.close();
+                outputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e("value",e.getLocalizedMessage()+"");
+                return false;
+            }
+
+            return true;
+        }
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            Log.e("value",values[0]+"");
+        }
+
+
+        @Override
+        protected void onPostExecute(Boolean download) {
+            if(download) {
+                Toast.makeText(context, "downloaded", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(context, "Downloaded error", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 }
