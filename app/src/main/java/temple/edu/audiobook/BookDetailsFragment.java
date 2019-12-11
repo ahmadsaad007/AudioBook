@@ -67,26 +67,40 @@ public class BookDetailsFragment extends Fragment {
             PlayButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(!isDownloaded(book))
-                        mListener.playBook(book);
-                    else{
-
-                    }
-                }
-            });
-            deleteButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    new Download(getActivity()).execute();//downlaod the book
-                    deleteButton.setText("Delete");
+                    mListener.playBook(book);
                 }
             });
         }
-
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isDownloaded()){
+                    deleteButton.setText("Delete");
+                    String file = getActivity().getFilesDir()
+                            + File.separator + book.id  + ".mp3";
+                    File fp = new File(file);
+                    fp.delete();
+                    Toast.makeText(getActivity(),"File Deleted",Toast.LENGTH_SHORT).show();
+                    deleteButton.setText("Download");
+                }
+                else {
+                    deleteButton.setText("Download");
+                    new Download(getActivity()).execute();
+                    deleteButton.setText("Delete");
+                }
+                //downlaod the book
+            }
+        });
         return v;
     }
-    public boolean isDownloaded(Book book){
-        return true;
+    public boolean isDownloaded(){
+        String file = getActivity().getFilesDir()
+                + File.separator + book.id  + ".mp3";
+        File fp = new File(file);
+        if(fp.exists()){
+            return  true;
+        }
+        return false;
     }
 
 
@@ -114,8 +128,6 @@ public class BookDetailsFragment extends Fragment {
     public interface BookDetailsInterface{
         void playBook (Book book);
     }
-
-
 
 
     private  class Download extends AsyncTask<Void, Integer, Boolean> {
@@ -151,7 +163,6 @@ public class BookDetailsFragment extends Fragment {
                 Log.e("value",e.getLocalizedMessage()+"");
                 return false;
             }
-
             return true;
         }
         @Override
@@ -159,14 +170,12 @@ public class BookDetailsFragment extends Fragment {
             super.onProgressUpdate(values);
             Log.e("value",values[0]+"");
         }
-
-
         @Override
         protected void onPostExecute(Boolean download) {
             if(download) {
-                Toast.makeText(context, "downloaded", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "File Downloaded", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(context, "Downloaded error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "File Download Error", Toast.LENGTH_SHORT).show();
             }
         }
     }

@@ -3,6 +3,7 @@ package temple.edu.audiobook;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -18,6 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -49,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     boolean isPlaying;
     Intent service;
     int bookId = -1;
-
+    private SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         searchString = findViewById(R.id.searchText);
         searchButton = findViewById(R.id.searchButton);
         onePane = findViewById(R.id.detailfrag) == null;
-
+        sharedPreferences =  getSharedPreferences("book",MODE_PRIVATE);
         books = new ArrayList<>();
         searchText = "";
         detailsFragment = new BookDetailsFragment();
@@ -119,6 +121,8 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             public void onClick(View view) {
                 if(connected){
                     //if pause is true and you click again it should play
+
+                    sharedPreferences.edit().putInt(bookId+"",seekbar.getProgress()).commit();
                     mediaControlBinder.pause();
                 }
             }
@@ -130,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                 mediaControlBinder.stop();
                 nowPlayingBookTitle = "Now Playing: ";
                 setTitle(nowPlayingBookTitle);
+                sharedPreferences.edit().putInt(bookId+"",0).commit();
                 seekbar.setProgress(0);
                 isPlaying = false;
                 bookId = -1;
@@ -258,6 +263,8 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         //now playing title
         mediaControlBinder.play(book.id);
         isPlaying = true;
+
     }
 
+   
 }
