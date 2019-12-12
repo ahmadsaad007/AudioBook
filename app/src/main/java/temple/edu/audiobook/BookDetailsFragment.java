@@ -70,28 +70,29 @@ public class BookDetailsFragment extends Fragment {
                     mListener.playBook(book);
                 }
             });
+
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(isDownloaded()){
+                        deleteButton.setText("Delete");
+                        String file = getActivity().getFilesDir()
+                                + File.separator + book.id  + ".mp3";
+                        File fp = new File(file);
+                        fp.delete();
+                        Toast.makeText(getActivity(),"File Deleted",Toast.LENGTH_SHORT).show();
+                        deleteButton.setText("Download");
+                    }
+                    else {
+                        deleteButton.setText("Download");
+                        new Download(getActivity()).execute();
+                        Toast.makeText(getActivity(),"File Downloaded",Toast.LENGTH_SHORT).show();
+                        deleteButton.setText("Delete");
+                    }
+                    //downlaod the book
+                }
+            });
         }
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(isDownloaded()){
-                    deleteButton.setText("Delete");
-                    String file = getActivity().getFilesDir()
-                            + File.separator + book.id  + ".mp3";
-                    File fp = new File(file);
-                    fp.delete();
-                    Toast.makeText(getActivity(),"File Deleted",Toast.LENGTH_SHORT).show();
-                    deleteButton.setText("Download");
-                }
-                else {
-                    deleteButton.setText("Download");
-                    new Download(getActivity()).execute();
-                    Toast.makeText(getActivity(),"File Downloaded",Toast.LENGTH_SHORT).show();
-                    deleteButton.setText("Delete");
-                }
-                //downlaod the book
-            }
-        });
         return v;
     }
     public boolean isDownloaded(){
@@ -144,24 +145,24 @@ public class BookDetailsFragment extends Fragment {
                 URL url = new URL("https://kamorris.com/lab/audlib/download.php?id="+book.id);
                 URLConnection urlConnection = url.openConnection();
                 InputStream inputStream = urlConnection.getInputStream();
-                int contentLength = urlConnection.getContentLength();
-                String filePath = context.getFilesDir()
+                int conLength = urlConnection.getContentLength();
+                String file = context.getFilesDir()
                         + File.separator + book.id + ".mp3";
-                Log.e("value",filePath+"");
-                int downloadSize = 0;
+                //Log.e("Erro Value",file+"");
+                int downSize = 0;
                 byte[] bytes = new byte[1024];
                 int length;
-                OutputStream outputStream = new FileOutputStream(filePath);
+                OutputStream outputStream = new FileOutputStream(file);
                 while ((length = inputStream.read(bytes)) != -1){
                     outputStream.write(bytes,0,length);
-                    downloadSize += length;
-                    publishProgress(downloadSize * 100/contentLength);
+                    downSize += length;
+                    publishProgress(downSize * 100/conLength);
                 }
                 inputStream.close();
                 outputStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
-                Log.e("value",e.getLocalizedMessage()+"");
+                //Log.e("Error Value",e.getLocalizedMessage()+"");
                 return false;
             }
             return true;
