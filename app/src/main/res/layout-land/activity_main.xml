@@ -20,8 +20,8 @@
 
         <EditText
             android:id="@+id/searchText"
-            android:layout_width="432dp"
-            android:layout_height="40dp"
+            android:layout_width="433dp"
+            android:layout_height="33dp"
             android:layout_gravity="top|left"
             android:layout_marginStart="65dp"
             android:layout_marginTop="24dp"
@@ -36,8 +36,8 @@
 
         <Button
             android:id="@+id/searchButton"
-            android:layout_width="111dp"
-            android:layout_height="39dp"
+            android:layout_width="105dp"
+            android:layout_height="33dp"
             android:layout_gravity="right|top"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="96dp"
@@ -49,8 +49,8 @@
         <FrameLayout
             android:id="@+id/listfrag"
             android:name="temple.edu.bookcase.BookListFragment"
-            android:layout_width="255dp"
-            android:layout_height="174dp"
+            android:layout_width="232dp"
+            android:layout_height="196dp"
             android:layout_gravity="bottom|left"
             android:layout_marginStart="56dp"
             android:layout_marginEnd="10dp"
@@ -64,8 +64,8 @@
         <FrameLayout
             android:id="@+id/detailfrag"
             android:name="temple.edu.bookcase.BookDetailsFragment"
-            android:layout_width="296dp"
-            android:layout_height="179dp"
+            android:layout_width="304dp"
+            android:layout_height="209dp"
             android:layout_gravity="bottom|right"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="79dp"

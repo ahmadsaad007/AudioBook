@@ -86,6 +86,7 @@ public class BookDetailsFragment extends Fragment {
                 else {
                     deleteButton.setText("Download");
                     new Download(getActivity()).execute();
+                    Toast.makeText(getActivity(),"File Downloaded",Toast.LENGTH_SHORT).show();
                     deleteButton.setText("Delete");
                 }
                 //downlaod the book

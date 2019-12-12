@@ -8,11 +8,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         searchString = findViewById(R.id.searchText);
         searchButton = findViewById(R.id.searchButton);
         onePane = findViewById(R.id.detailfrag) == null;
-        sharedPreferences =  getSharedPreferences("book",MODE_PRIVATE);
+        sharedPreferences =  getSharedPreferences("Book",MODE_PRIVATE);
         books = new ArrayList<>();
         searchText = "";
         detailsFragment = new BookDetailsFragment();
@@ -71,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         stopButton = findViewById(R.id.imageButton3);
 
         seekbar = findViewById(R.id.seekBar);
-
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
@@ -81,7 +82,6 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                     }
                 }
             }
-
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
 
@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                 getBook(searchText);
             }
         });
+        getBook(searchText);
 
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
@@ -121,7 +122,6 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             public void onClick(View view) {
                 if(connected){
                     //if pause is true and you click again it should play
-
                     sharedPreferences.edit().putInt(bookId+"",seekbar.getProgress()).commit();
                     mediaControlBinder.pause();
                 }
@@ -201,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
             }
             if (!onePane) {
+                Toast.makeText(getApplicationContext(),"Landscape Mode", Toast.LENGTH_SHORT).show();
                 listFragment.getBooks(books);
             } else {
                 viewPagerFragment.addPager(books);
@@ -260,11 +261,36 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         setTitle(title);
         nowPlayingBookTitle= title;
         nowPlayingBookDuration = book.duration;
-        //now playing title
-        mediaControlBinder.play(book.id);
+        //playing title
+        if (bookDownloaded()){
+            String file = getFilesDir()
+                    + File.separator +bookId + ".mp3";
+            File fp = new File(file);
+            int startPosition = sharedPreferences.getInt(bookId+"",0);
+            mediaControlBinder.play(fp, startPosition);
+            Log.e("TAG123","PLAYING FROM A BOOK");
+        }else{
+            mediaControlBinder.play(bookId);
+            Log.e("TAG123","PLAYING FROM THE INTERNET");
+        }
+        //mediaControlBinder.play(book.id);
         isPlaying = true;
 
     }
 
-   
+
+    public boolean bookDownloaded(){
+
+        if (bookId==-1){
+            return  false;
+        }
+        String file = getFilesDir()
+                + File.separator +bookId + ".mp3";
+        File fp = new File(file);
+        if(fp.exists()){
+            return  true;
+        }
+        return false;
+    }
+
 }
